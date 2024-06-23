@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/marron_flush"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    tools:context=".Profile_Fragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/profile"
+        android:textColor="@color/white"
+        android:fontFamily="@font/bebas_neue_regular"
+        android:layout_marginTop="32dp"
+        android:textSize="40sp" />
+
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/baseline_person_24"
+        android:contentDescription="@string/profile_image"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_username"
+        android:textColor="@color/white"
+        android:fontFamily="@font/bebas_neue_regular"
+        android:textSize="28sp"
+        android:layout_marginBottom="10dp"/>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/marron_flush">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/firasans_semibold"
+                android:textSize="16sp"
+                android:paddingStart="70dp"
+                android:text="Name   :"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="0dp"
+                android:paddingStart="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:fontFamily="@font/firasans_semibold"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/firasans_semibold"
+                android:textSize="16sp"
+                android:paddingStart="70dp"
+                android:text="Status  :"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/profile_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingStart="5dp"
+                android:fontFamily="@font/firasans_semibold"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/firasans_semibold"
+                android:textSize="16sp"
+                android:paddingStart="70dp"
+                android:text="Email    :"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/profile_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingStart="5dp"
+                android:fontFamily="@font/firasans_semibold"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/firasans_semibold"
+                android:textSize="16sp"
+                android:paddingStart="70dp"
+                android:text="Phone  :"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/profile_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingStart="5dp"
+                android:layout_weight="2"
+                android:fontFamily="@font/firasans_semibold"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry" />
+        </TableRow>
+
+    </TableLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/edit_profile"
+            android:layout_width="120dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/btn"
+            android:fontFamily="@font/firasans_semibold"
+            android:text="@string/edit_profile"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            tools:ignore="TextSizeCheck" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/logout"
+            android:layout_width="120dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/btn"
+            android:fontFamily="@font/firasans_semibold"
+            android:text="@string/logout"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</LinearLayout>

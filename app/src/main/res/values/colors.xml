@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="pink">#CE5084</color>
+    <color name="ribbon_red">#F61E56</color>
+    <color name="disco">#83144A</color>
+    <color name="tawny_port">#671B4E</color>
+    <color name="marron_flush">#AD164B</color>
+    <color name="charm">#CF728D</color>
+    <color name="carissma">#E987AE</color>
+    <color name="mulberry">#CE5084</color>
+
+</resources>

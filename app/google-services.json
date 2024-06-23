@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "728131504458",
+    "project_id": "gb-chat-b8fa1",
+    "storage_bucket": "gb-chat-b8fa1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728131504458:android:ddaeaf69c55c590ed299b3",
+        "android_client_info": {
+          "package_name": "com.GameBuddy.gb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBezRQTh0thYN5pbrzUFrZIdJz9htfpV7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

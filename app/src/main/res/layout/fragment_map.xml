@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/marron_flush"
+    tools:context=".Map_Fragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="map FRAGMENT"
+        android:textColor="@color/white"
+        android:fontFamily="@font/bebas_neue_regular"
+        android:gravity="center"
+        android:textSize="50sp"/>
+
+
+</FrameLayout>

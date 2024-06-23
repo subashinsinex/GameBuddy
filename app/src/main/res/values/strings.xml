@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Game Buddy</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="click_to_login">Click to Login</string>
+    <string name="click_to_register">Click to Register</string>
+    <string name="logout">Logout</string>
+    <string name="logo">Logo</string>
+    <string name="username">Username</string>
+    <string name="not_yet_register_signup_now">Not yet Register? SignUp Now</string>
+    <string name="already_have_a_account_signin_now">Already Have a Account? SignIn Now</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="name">Name</string>
+    <string name="profile">Profile</string>
+    <string name="map">Map</string>
+    <string name="search">Search</string>
+    <string name="home">Home</string>
+    <string name="gamebuddy">GameBuddy</string>
+    <string name="chat">Chat</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="selected">Selected</string>
+    <string name="unselected">Unselected</string>
+    <string name="profile_image">profile image</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="status">Status</string>
+    <string name="phone">Phone</string>
+    <string name="user_details">USER DETAILS</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="update">Update</string>
+    <string name="save_photo">Save Photo</string>
+</resources>

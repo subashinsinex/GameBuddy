@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/tawny_port"
+    android:elevation="20sp">
+
+    <ImageView
+        android:contentDescription="@string/logo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/logo"
+        android:layout_marginTop="28dp"
+        android:elevation="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gamebuddy"
+        android:textColor="@color/white"
+        android:fontFamily="@font/bebas_neue_regular"
+        android:layout_marginTop="42dp"
+        android:textSize="25sp"/>
+
+</androidx.appcompat.widget.Toolbar>
