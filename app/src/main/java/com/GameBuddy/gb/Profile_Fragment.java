@@ -10,19 +10,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class Profile_Fragment extends Fragment {
 
-    private TextView profileName , profileUsername , profileStatus , profileEmail , profilePhone;
+    private TextView profileName, profileUsername, profileStatus, profileEmail, profilePhone;
     private ImageView photo;
     private Button editProfile, logout;
+    private FirebaseUser currentUser;
+    private FirebaseFirestore db;
+    private FirebaseStorage storage;
 
     public Profile_Fragment() {
     }
@@ -30,9 +36,11 @@ public class Profile_Fragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+
         if (currentUser != null) {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
             String uid = currentUser.getUid();
             db.collection("users").document(uid).get()
                     .addOnCompleteListener(task -> {
@@ -44,11 +52,20 @@ public class Profile_Fragment extends Fragment {
                                 String status = document.getString("status");
                                 String email = document.getString("email");
                                 String phone = document.getString("phone");
+                                String profilePicUrl = document.getString("profile_pic");
+
                                 profileUsername.setText(username);
                                 profileName.setText(name);
                                 profileStatus.setText(status);
                                 profileEmail.setText(email);
                                 profilePhone.setText(phone);
+
+                                if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
+                                    loadProfileImage(profilePicUrl);
+                                } else {
+                                    photo.setImageResource(R.drawable.baseline_person_24); // Set default profile picture
+                                }
+
                             } else {
                                 Toast.makeText(getActivity(), "User data not found", Toast.LENGTH_SHORT).show();
                             }
@@ -58,9 +75,23 @@ public class Profile_Fragment extends Fragment {
                     });
         }
     }
-    
+
+    private void loadProfileImage(String profilePicUrl) {
+        StorageReference profilePicRef = storage.getReferenceFromUrl(profilePicUrl);
+        profilePicRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            Glide.with(this)
+                    .load(uri)
+                    .placeholder(R.drawable.baseline_person_24) // Optional: show placeholder while loading
+                    .error(R.drawable.baseline_person_24) // Optional: show error placeholder if failed
+                    .into(photo);
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getActivity(), "Failed to load profile picture", Toast.LENGTH_SHORT).show();
+            photo.setImageResource(R.drawable.baseline_person_24); // Set default profile picture if failed
+        });
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         photo = view.findViewById(R.id.profile_image);
@@ -79,22 +110,15 @@ public class Profile_Fragment extends Fragment {
         });
 
         editProfile.setOnClickListener(v -> {
-            Intent  intent = new Intent(getActivity(), User_Details.class);
+            Intent intent = new Intent(getActivity(), User_Details.class);
             startActivity(intent);
         });
 
         photo.setOnClickListener(v -> {
-            Intent intent =new Intent();
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.setType("image/*");
-            startActivityForResult(intent,25);
+            Intent intent = new Intent(getActivity(), Profile_Image.class);
+            startActivity(intent);
         });
 
         return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }

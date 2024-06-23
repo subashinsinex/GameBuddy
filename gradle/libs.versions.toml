@@ -11,6 +11,11 @@ googleGmsGoogleServices = "4.4.1"
 firebaseAuth = "23.0.0"
 firebaseFirestore = "25.0.0"
 legacySupportV4 = "1.0.0"
+firebaseStorage = "21.0.0"
+glide = "5.0.0-rc01"
+ucrop = "2.2.8"
+androidImageCropper = "prefix infimum version for "
+androidImageCropperVersion = "prefix infimum version for "
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -23,6 +28,11 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "ucrop" }
+android-image-cropper = { group = "com.github.ArthurHub", name = "Android-Image-Cropper", version.ref = "androidImageCropper" }
+arthurhub-android-image-cropper = { group = "com.github.ArthurHub", name = "Android-Image-Cropper", version.ref = "androidImageCropperVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/marron_flush"
+    tools:context=".Profile_Image">
+
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@drawable/baseline_person_24"
+        android:contentDescription="@string/profile_image"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/get"
+        android:layout_width="220dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn"
+        android:fontFamily="@font/firasans_semibold"
+        android:text="Change profile picture"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        tools:ignore="TextSizeCheck" />
+
+</LinearLayout>

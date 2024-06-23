@@ -36,8 +36,6 @@ public class User_Details extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        auth.setLanguageCode("en");
-
         update.setOnClickListener(v -> {
             String nameTxt = Objects.requireNonNull(name.getText()).toString().trim();
             String usernameTxt = Objects.requireNonNull(username.getText()).toString().trim();
