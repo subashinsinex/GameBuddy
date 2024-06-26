@@ -20,6 +20,7 @@
     <string name="home">Home</string>
     <string name="gamebuddy">GameBuddy</string>
     <string name="chat">Chat</string>
+    <string name="API_KEY">AIzaSyBoeWa7I8MY5K3NwwmvxbfjugwQ4Yj18eE</string>>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="selected">Selected</string>
     <string name="unselected">Unselected</string>
@@ -31,4 +32,5 @@
     <string name="mobile_number">Mobile Number</string>
     <string name="update">Update</string>
     <string name="save_photo">Save Photo</string>
+    <string name="camera">Camera</string>
 </resources>

@@ -15,24 +15,24 @@
         android:textColor="@color/white"
         android:fontFamily="@font/bebas_neue_regular"
         android:layout_marginTop="32dp"
+        android:layout_marginBottom="10dp"
         android:textSize="40sp" />
 
     <ImageView
         android:id="@+id/profile_image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/baseline_person_24"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:contentDescription="@string/profile_image"
+        android:padding="4dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/baseline_person_24"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true" />
+        android:layout_marginBottom="16dp" />
 
     <TextView
+        android:id="@+id/profile_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/profile_username"
         android:textColor="@color/white"
         android:fontFamily="@font/bebas_neue_regular"
         android:textSize="28sp"
@@ -44,7 +44,7 @@
         android:background="@color/marron_flush">
 
         <TableRow
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
 
@@ -63,18 +63,18 @@
             <TextView
                 android:id="@+id/profile_name"
                 android:layout_width="0dp"
-                android:paddingStart="5dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:fontFamily="@font/firasans_semibold"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
+                android:paddingStart="5dp"
                 tools:ignore="RtlSymmetry" />
         </TableRow>
 
         <TableRow
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
 
@@ -95,15 +95,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:paddingStart="5dp"
                 android:fontFamily="@font/firasans_semibold"
                 android:textSize="16sp"
                 android:textColor="@color/white"
+                android:paddingStart="5dp"
                 tools:ignore="RtlSymmetry" />
         </TableRow>
 
         <TableRow
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
 
@@ -124,15 +124,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:paddingStart="5dp"
                 android:fontFamily="@font/firasans_semibold"
                 android:textSize="16sp"
                 android:textColor="@color/white"
+                android:paddingStart="5dp"
                 tools:ignore="RtlSymmetry" />
         </TableRow>
 
         <TableRow
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
 
@@ -152,11 +152,11 @@
                 android:id="@+id/profile_phone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingStart="5dp"
                 android:layout_weight="2"
                 android:fontFamily="@font/firasans_semibold"
                 android:textSize="16sp"
                 android:textColor="@color/white"
+                android:paddingStart="5dp"
                 tools:ignore="RtlSymmetry" />
         </TableRow>
 
@@ -165,15 +165,15 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="15dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/edit_profile"
             android:layout_width="120dp"
             android:layout_height="48dp"
-            android:layout_marginTop="25dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="15dp"
             android:background="@drawable/btn"
             android:fontFamily="@font/firasans_semibold"
             android:text="@string/edit_profile"
@@ -185,8 +185,6 @@
             android:id="@+id/logout"
             android:layout_width="120dp"
             android:layout_height="48dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="15dp"
             android:layout_marginStart="10dp"
             android:background="@drawable/btn"
             android:fontFamily="@font/firasans_semibold"

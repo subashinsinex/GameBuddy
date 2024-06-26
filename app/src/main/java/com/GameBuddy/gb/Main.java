@@ -1,6 +1,10 @@
 package com.GameBuddy.gb;
 
+import android.content.Intent;
+import android.media.audiofx.Equalizer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -14,6 +18,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 public class Main extends AppCompatActivity {
 
@@ -35,10 +45,10 @@ public class Main extends AppCompatActivity {
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.chat) {
                 replaceFragment(new Chat_Fragment(userData)); // Pass user data to fragments
-            } else if (item.getItemId() == R.id.search) {
-                replaceFragment(new Search_Fragment(userData)); // Pass user data to fragments
+            } else if (item.getItemId() == R.id.camera) {
+                replaceFragment(new Camera_Fragment()); // Pass user data to fragments
             } else if (item.getItemId() == R.id.map) {
-                replaceFragment(new Map_Fragment(userData)); // Pass user data to fragments
+                replaceFragment(new Map_Fragment()); // Pass user data to fragments
             } else if (item.getItemId() == R.id.profile) {
                 replaceFragment(new Profile_Fragment()); // Pass user data to fragments
             }

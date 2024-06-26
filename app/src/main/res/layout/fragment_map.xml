@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/marron_flush"
     tools:context=".Map_Fragment">
 
-    <TextView
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/mapView"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="map FRAGMENT"
-        android:textColor="@color/white"
-        android:fontFamily="@font/bebas_neue_regular"
-        android:gravity="center"
-        android:textSize="50sp"/>
+        android:layout_height="match_parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/location"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="24dp"
+        android:contentDescription="@string/map"
+        android:src="@drawable/location"
+        app:maxImageSize="35dp"
+        app:fabCustomSize="50dp"
+        app:layout_anchorGravity="center"/>
 
 </FrameLayout>
