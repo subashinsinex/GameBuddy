@@ -26,7 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Search_Fragment extends Fragment {
+public class Search_Fragment extends Fragment implements UsersAdapter.OnUserClickListener {
 
     private RecyclerView recyclerView;
     private UsersAdapter adapter;
@@ -51,6 +51,7 @@ public class Search_Fragment extends Fragment {
         userList = new ArrayList<>();
         filteredList = new ArrayList<>();
         adapter = new UsersAdapter(getContext(), filteredList);
+        adapter.setOnUserClickListener(this);// Pass 'this' as the listener
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
@@ -125,5 +126,14 @@ public class Search_Fragment extends Fragment {
             filteredList.addAll(userList); // Show all users if query is empty
         }
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onUserClick(User user) {
+        // Handle user click here
+        Log.d("Search_Fragment", "User clicked: " + user.getUsername());
+
+        // Example: Start Chat_Activity with user data
+        startActivity(Chat.newIntent(getContext(), user.getUid(), user.getUsername(), user.getProfile_pic()));
     }
 }
