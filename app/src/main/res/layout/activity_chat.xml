@@ -40,12 +40,12 @@
 
                 <!-- Emoticon icon button -->
                 <ImageButton
-                    android:id="@+id/buttonEmoticon"
+                    android:id="@+id/cameraButton"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:src="@drawable/camera"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Emoticon button"
+                    android:contentDescription="Camera button"
                     android:scaleType="centerInside"
                     android:padding="12dp"
                     app:tint="@color/white" />
