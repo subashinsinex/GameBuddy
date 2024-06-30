@@ -29,9 +29,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -181,8 +183,9 @@ public class Chat extends AppCompatActivity {
 
     private void fetchMessages() {
         messageRef
-                .whereEqualTo("senderId", currentUserId)
-                .whereEqualTo("receiverId", userId)
+                .whereIn("senderId", Arrays.asList(currentUserId, userId))
+                .whereIn("receiverId", Arrays.asList(currentUserId, userId))
+                .orderBy("timestamp", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
@@ -191,73 +194,36 @@ public class Chat extends AppCompatActivity {
                             return;
                         }
 
-                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
-                            switch (dc.getType()) {
-                                case ADDED:
-                                    Message message = dc.getDocument().toObject(Message.class);
-                                    messageList.add(message);
-                                    break;
-                                case MODIFIED:
-                                    // Handle message modification if needed
-                                    break;
-                                case REMOVED:
-                                    // Handle message removal if needed
-                                    break;
-                            }
-                        }
-
-                        // Notify adapter about data changes
-                        adapter.notifyDataSetChanged();
-                        // Scroll to the bottom when a new message is added
-                        recyclerViewMessages.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (adapter.getItemCount() > 0) {
-                                    recyclerViewMessages.smoothScrollToPosition(adapter.getItemCount() - 1);
+                        if (snapshots != null) {
+                            for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                                switch (dc.getType()) {
+                                    case ADDED:
+                                        Message message = dc.getDocument().toObject(Message.class);
+                                        messageList.add(message);
+                                        break;
+                                    case MODIFIED:
+                                        // Handle message modification if needed
+                                        break;
+                                    case REMOVED:
+                                        // Handle message removal if needed
+                                        break;
                                 }
                             }
-                        });
-                    }
-                });
 
-        messageRef
-                .whereEqualTo("senderId", userId)
-                .whereEqualTo("receiverId", currentUserId)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
-                            return;
-                        }
-
-                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
-                            switch (dc.getType()) {
-                                case ADDED:
-                                    Message message = dc.getDocument().toObject(Message.class);
-                                    messageList.add(message);
-                                    break;
-                                case MODIFIED:
-                                    // Handle message modification if needed
-                                    break;
-                                case REMOVED:
-                                    // Handle message removal if needed
-                                    break;
-                            }
-                        }
-
-                        // Notify adapter about data changes
-                        adapter.notifyDataSetChanged();
-                        // Scroll to the bottom when a new message is added
-                        recyclerViewMessages.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (adapter.getItemCount() > 0) {
-                                    recyclerViewMessages.smoothScrollToPosition(adapter.getItemCount() - 1);
+                            // Notify adapter about data changes
+                            adapter.notifyDataSetChanged();
+                            // Scroll to the bottom when a new message is added
+                            recyclerViewMessages.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (adapter.getItemCount() > 0) {
+                                        recyclerViewMessages.smoothScrollToPosition(adapter.getItemCount() - 1);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 });
     }
+
 }

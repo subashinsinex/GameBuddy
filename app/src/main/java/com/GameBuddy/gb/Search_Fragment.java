@@ -35,6 +35,7 @@ public class Search_Fragment extends Fragment {
     private FirebaseFirestore db;
     private ProgressBar progressBar;
     private TextInputEditText searchInput;
+    private String currentUserId;
 
     @Nullable
     @Override
@@ -53,6 +54,7 @@ public class Search_Fragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get current user ID
         fetchUsers();
 
         searchInput.addTextChangedListener(new TextWatcher() {
@@ -73,28 +75,24 @@ public class Search_Fragment extends Fragment {
 
     private void fetchUsers() {
         progressBar.setVisibility(View.VISIBLE);
-        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get current user ID
         db.collection("users")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         progressBar.setVisibility(View.GONE);
                         if (error != null) {
-                            Log.e("ChatFragment", "Error fetching users", error);
+                            Log.e("SearchFragment", "Error fetching users", error);
                             return;
                         }
 
                         userList.clear();
                         for (QueryDocumentSnapshot document : value) {
-                            // Get the document ID (which acts as the uid)
                             String uid = document.getId();
-
-                            // Skip the current user
                             if (uid.equals(currentUserId)) {
-                                continue;
+                                continue; // Skip current user
                             }
 
-                            // Retrieve other fields from the document
+                            // Retrieve user data
                             String username = document.getString("username");
                             String name = document.getString("name");
                             String email = document.getString("email");
@@ -106,12 +104,14 @@ public class Search_Fragment extends Fragment {
                             User user = new User(uid, username, name, email, phone, status, profile_pic);
                             userList.add(user);
                         }
-                        Log.d("ChatFragment", "Users fetched: " + userList.size());
+
+                        // Update filtered list initially with all users except current user
+                        filteredList.clear();
+                        filteredList.addAll(userList);
                         adapter.notifyDataSetChanged();
                     }
                 });
     }
-
 
     private void filterUsers(String query) {
         filteredList.clear();
@@ -121,6 +121,8 @@ public class Search_Fragment extends Fragment {
                     filteredList.add(user);
                 }
             }
+        } else {
+            filteredList.addAll(userList); // Show all users if query is empty
         }
         adapter.notifyDataSetChanged();
     }
