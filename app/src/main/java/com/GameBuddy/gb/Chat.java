@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,8 +24,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -103,7 +108,12 @@ public class Chat extends AppCompatActivity {
                 if (keypadHeight > screenHeight * 0.15) { // 15% of the screen height
                     // Keyboard is opened
                     if (adapter != null && adapter.getItemCount() > 0) {
-                        recyclerViewMessages.smoothScrollToPosition(adapter.getItemCount() - 1);
+                        recyclerViewMessages.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerViewMessages.smoothScrollToPosition(adapter.getItemCount() - 1);
+                            }
+                        });
                     }
                 }
             }
@@ -128,6 +138,9 @@ public class Chat extends AppCompatActivity {
                 }
             }
         });
+
+        // Fetch and listen to messages
+        fetchMessages();
     }
 
     private void updateToolbar(String userName, String profilePicUrl) {
@@ -162,6 +175,88 @@ public class Chat extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG, "Error adding message", e);
                         // Handle errors
+                    }
+                });
+    }
+
+    private void fetchMessages() {
+        messageRef
+                .whereEqualTo("senderId", currentUserId)
+                .whereEqualTo("receiverId", userId)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+
+                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                            switch (dc.getType()) {
+                                case ADDED:
+                                    Message message = dc.getDocument().toObject(Message.class);
+                                    messageList.add(message);
+                                    break;
+                                case MODIFIED:
+                                    // Handle message modification if needed
+                                    break;
+                                case REMOVED:
+                                    // Handle message removal if needed
+                                    break;
+                            }
+                        }
+
+                        // Notify adapter about data changes
+                        adapter.notifyDataSetChanged();
+                        // Scroll to the bottom when a new message is added
+                        recyclerViewMessages.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (adapter.getItemCount() > 0) {
+                                    recyclerViewMessages.smoothScrollToPosition(adapter.getItemCount() - 1);
+                                }
+                            }
+                        });
+                    }
+                });
+
+        messageRef
+                .whereEqualTo("senderId", userId)
+                .whereEqualTo("receiverId", currentUserId)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+
+                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                            switch (dc.getType()) {
+                                case ADDED:
+                                    Message message = dc.getDocument().toObject(Message.class);
+                                    messageList.add(message);
+                                    break;
+                                case MODIFIED:
+                                    // Handle message modification if needed
+                                    break;
+                                case REMOVED:
+                                    // Handle message removal if needed
+                                    break;
+                            }
+                        }
+
+                        // Notify adapter about data changes
+                        adapter.notifyDataSetChanged();
+                        // Scroll to the bottom when a new message is added
+                        recyclerViewMessages.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (adapter.getItemCount() > 0) {
+                                    recyclerViewMessages.smoothScrollToPosition(adapter.getItemCount() - 1);
+                                }
+                            }
+                        });
                     }
                 });
     }

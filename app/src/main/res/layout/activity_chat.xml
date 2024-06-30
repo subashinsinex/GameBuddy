@@ -29,8 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:padding="8dp"
-                tools:listitem="@layout/item_message_sent" />
+                android:padding="8dp"/>
 
             <!-- Input area for typing messages -->
             <LinearLayout

@@ -9,16 +9,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
-    private static final int VIEW_TYPE_MESSAGE_SENT = 1;
-    private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
+    private static final int VIEW_TYPE_SENT = 1;
+    private static final int VIEW_TYPE_RECEIVED = 2;
 
     private Context context;
     private List<Message> messageList;
-    private String currentUserId; // Current user's ID
+    private String currentUserId;
 
     public MessageAdapter(Context context, List<Message> messageList, String currentUserId) {
         this.context = context;
@@ -30,9 +31,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        if (viewType == VIEW_TYPE_MESSAGE_SENT) {
+        if (viewType == VIEW_TYPE_SENT) {
             view = LayoutInflater.from(context).inflate(R.layout.item_message_sent, parent, false);
-        } else { // VIEW_TYPE_MESSAGE_RECEIVED
+        } else {
             view = LayoutInflater.from(context).inflate(R.layout.item_message_received, parent, false);
         }
         return new MessageViewHolder(view);
@@ -53,22 +54,26 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public int getItemViewType(int position) {
         Message message = messageList.get(position);
         if (message.getSenderId().equals(currentUserId)) {
-            return VIEW_TYPE_MESSAGE_SENT;
+            return VIEW_TYPE_SENT;
         } else {
-            return VIEW_TYPE_MESSAGE_RECEIVED;
+            return VIEW_TYPE_RECEIVED;
         }
     }
 
-    static class MessageViewHolder extends RecyclerView.ViewHolder {
-        TextView messageTextView;
+    class MessageViewHolder extends RecyclerView.ViewHolder {
+        private TextView textMessage;
+        private TextView textTimestamp;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
-            messageTextView = itemView.findViewById(R.id.messageTextView);
+            textMessage = itemView.findViewById(R.id.text_message);
+            textTimestamp = itemView.findViewById(R.id.text_timestamp);
         }
 
         public void bind(Message message) {
-            messageTextView.setText(message.getContent());
+            textMessage.setText(message.getContent());
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            textTimestamp.setText(sdf.format(message.getTimestamp()));
         }
     }
 }
