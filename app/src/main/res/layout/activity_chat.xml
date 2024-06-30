@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/marron_flush"
+    android:orientation="vertical"
+    tools:context=".Chat">
+
+    <include layout="@layout/chat_toolbar" />
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- Chat Activity Content -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- RecyclerView to display chat messages -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewMessages"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                tools:listitem="@layout/item_message_sent" />
+
+            <!-- Input area for typing messages -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <!-- Emoticon icon button -->
+                <ImageButton
+                    android:id="@+id/buttonEmoticon"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/camera"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Emoticon button"
+                    android:scaleType="centerInside"
+                    android:padding="12dp"
+                    app:tint="@color/white" />
+
+                <!-- Message input field -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColorHint="@color/white"
+                    app:boxBackgroundColor="@color/charm"
+                    app:boxStrokeColor="@color/white"
+                    app:boxStrokeWidth="1dp"
+                    app:boxStrokeWidthFocused="1dp"
+                    app:cursorColor="@color/white"
+                    app:hintTextColor="@color/white">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextMessage"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:fontFamily="@font/firasans_semibold"
+                        android:paddingStart="8dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="8dp"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:inputType="textMultiLine"
+                        android:hint="Type a message"
+                        tools:ignore="TextContrastCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Send message button -->
+                <ImageButton
+                    android:id="@+id/buttonSend"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/send"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Send message"
+                    android:scaleType="centerInside"
+                    android:padding="12dp"
+                    app:tint="@color/white" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

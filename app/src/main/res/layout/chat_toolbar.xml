@@ -6,7 +6,8 @@
     android:elevation="20sp">
 
     <ImageView
-        android:contentDescription="@string/logo"
+        android:id="@+id/toolbar_profile_pic"
+        android:contentDescription="@string/profile_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/logo"
@@ -15,12 +16,14 @@
         android:elevation="40dp" />
 
     <TextView
+        android:id="@+id/toolbar_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/gamebuddy"
         android:textColor="@color/white"
         android:fontFamily="@font/bebas_neue_regular"
         android:layout_marginTop="42dp"
+        android:layout_marginStart="25dp"
         android:textSize="25sp"/>
 
 </androidx.appcompat.widget.Toolbar>

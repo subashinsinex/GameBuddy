@@ -1,25 +1,22 @@
 [versions]
-agp = "8.4.0"
+agp = "8.5.0"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-appcompat = "1.6.1"
+junitVersion = "1.2.0"
+espressoCore = "3.6.0"
+appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.9.0"
 constraintlayout = "2.1.4"
-googleGmsGoogleServices = "4.4.1"
+googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.0.0"
 firebaseFirestore = "25.0.0"
 legacySupportV4 = "1.0.0"
 firebaseStorage = "21.0.0"
 glide = "5.0.0-rc01"
-ucrop = "2.2.8"
-androidImageCropper = "prefix infimum version for "
-androidImageCropperVersion = "prefix infimum version for "
-playServicesMaps = "18.2.0"
+playServicesMaps = "19.0.0"
 dexter = "6.2.3"
 playServicesLocation = "21.3.0"
-playServicesMapsVersion = "18.1.0"
+playServicesMapsVersion = "19.0.0"
 fragment = "1.8.0"
 
 [libraries]
@@ -35,9 +32,6 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
-ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "ucrop" }
-android-image-cropper = { group = "com.github.ArthurHub", name = "Android-Image-Cropper", version.ref = "androidImageCropper" }
-arthurhub-android-image-cropper = { group = "com.github.ArthurHub", name = "Android-Image-Cropper", version.ref = "androidImageCropperVersion" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 dexter = { group = "com.karumi", name = "dexter", version.ref = "dexter" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }

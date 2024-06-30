@@ -92,9 +92,15 @@ public class Profile_Image extends AppCompatActivity {
                     user.put("profile_pic", uriDownload.toString());
                     db.collection("users").document(uid).update(user).addOnSuccessListener(aVoid -> {
                         Toast.makeText(Profile_Image.this, "Profile Picture Updated", Toast.LENGTH_SHORT).show();
+                        // Navigate to Main class's profile fragment
+                        Intent intent = new Intent(Profile_Image.this, Main.class);
+                        intent.putExtra("fragmentToLoad", "profileFragment"); // Assuming the key for profile fragment
+                        startActivity(intent);
+                        finish();
                     });
                 });
             });
         }
     }
+
 }

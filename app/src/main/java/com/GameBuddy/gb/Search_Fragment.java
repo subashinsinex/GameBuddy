@@ -1,6 +1,8 @@
 package com.GameBuddy.gb;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,31 +26,47 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Chat_Fragment extends Fragment implements UsersAdapter.OnUserClickListener {
+public class Search_Fragment extends Fragment {
 
     private RecyclerView recyclerView;
     private UsersAdapter adapter;
     private List<User> userList;
+    private List<User> filteredList;
     private FirebaseFirestore db;
     private ProgressBar progressBar;
+    private TextInputEditText searchInput;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         progressBar = view.findViewById(R.id.progressBar);
+        searchInput = view.findViewById(R.id.searchInput);
 
         userList = new ArrayList<>();
-        adapter = new UsersAdapter(getContext(), userList);
-        adapter.setOnUserClickListener(this); // Set the listener in Fragment
+        filteredList = new ArrayList<>();
+        adapter = new UsersAdapter(getContext(), filteredList);
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
         fetchUsers();
+
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                filterUsers(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
 
         return view;
     }
@@ -94,12 +113,15 @@ public class Chat_Fragment extends Fragment implements UsersAdapter.OnUserClickL
     }
 
 
-    @Override
-    public void onUserClick(User user) {
-        Log.d("Chat_Fragment", "User ID clicked: " + user.getUid());
-        Log.d("Chat_Fragment", "User Name clicked: " + user.getUsername());
-
-        // Pass user data to Chat_Activity
-        startActivity(Chat.newIntent(getContext(), user.getUid(), user.getUsername(), user.getProfile_pic()));
+    private void filterUsers(String query) {
+        filteredList.clear();
+        if (!query.isEmpty()) {
+            for (User user : userList) {
+                if (user.getUsername().toLowerCase().contains(query.toLowerCase())) {
+                    filteredList.add(user);
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 }
