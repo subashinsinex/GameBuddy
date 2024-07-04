@@ -1,6 +1,5 @@
 package com.GameBuddy.gb;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -91,19 +90,17 @@ public class Profile_Pic extends Fragment {
             binding.profileImage.setImageURI(uri);
             String uid = currentUser.getUid();
             final StorageReference reference = storage.getReference().child("profile_pic").child(uid);
-            reference.putFile(uri).addOnSuccessListener(taskSnapshot -> {
-                reference.getDownloadUrl().addOnSuccessListener(uriDownload -> {
-                    Map<String, Object> user = new HashMap<>();
-                    user.put("profile_pic", uriDownload.toString());
-                    db.collection("users").document(uid).update(user).addOnSuccessListener(aVoid -> {
-                        Toast.makeText(getContext(), "Profile Picture Updated", Toast.LENGTH_SHORT).show();
-                        // Navigate back to user profile fragment
-                        navigateBackToUserProfile();
-                        isProcessingImage = false;
-                        binding.get.setEnabled(true); // Enable the button after image processing is complete
-                    });
+            reference.putFile(uri).addOnSuccessListener(taskSnapshot -> reference.getDownloadUrl().addOnSuccessListener(uriDownload -> {
+                Map<String, Object> user = new HashMap<>();
+                user.put("profile_pic", uriDownload.toString());
+                db.collection("users").document(uid).update(user).addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Profile Picture Updated", Toast.LENGTH_SHORT).show();
+                    // Navigate back to user profile fragment
+                    navigateBackToUserProfile();
+                    isProcessingImage = false;
+                    binding.get.setEnabled(true); // Enable the button after image processing is complete
                 });
-            });
+            }));
         }
     }
 
