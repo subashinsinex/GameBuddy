@@ -1,5 +1,6 @@
 package com.GameBuddy.gb;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,11 +26,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class Chat_Fragment extends Fragment implements UsersAdapter.OnUserClickListener {
 
-    private RecyclerView recyclerView;
     private UsersAdapter adapter;
     private List<User> userList;
     private FirebaseFirestore db;
@@ -44,7 +45,7 @@ public class Chat_Fragment extends Fragment implements UsersAdapter.OnUserClickL
 
         noUser = view.findViewById(R.id.noUsersTextView);
 
-        recyclerView = view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         progressBar = view.findViewById(R.id.progressBar);
@@ -55,7 +56,7 @@ public class Chat_Fragment extends Fragment implements UsersAdapter.OnUserClickL
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
-        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get current user ID
+        currentUserId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(); // Get current user ID
         fetchUsers();
 
         return view;
@@ -70,42 +71,38 @@ public class Chat_Fragment extends Fragment implements UsersAdapter.OnUserClickL
         // Query messages where the current user is sender
         db.collection("messages")
                 .whereEqualTo("senderId", currentUserId)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot senderMessages, @Nullable FirebaseFirestoreException error) {
-                        if (error != null) {
-                            Log.e("ChatFragment", "Error fetching sender messages", error);
-                            return;
-                        }
-
-                        // Add receivers' IDs from sender messages
-                        for (QueryDocumentSnapshot document : senderMessages) {
-                            String receiverId = document.getString("receiverId");
-                            userIds.add(receiverId);
-                        }
-
-                        // Query messages where the current user is receiver
-                        db.collection("messages")
-                                .whereEqualTo("receiverId", currentUserId)
-                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable QuerySnapshot receiverMessages, @Nullable FirebaseFirestoreException error) {
-                                        if (error != null) {
-                                            Log.e("ChatFragment", "Error fetching receiver messages", error);
-                                            return;
-                                        }
-
-                                        // Add senders' IDs from receiver messages
-                                        for (QueryDocumentSnapshot document : receiverMessages) {
-                                            String senderId = document.getString("senderId");
-                                            userIds.add(senderId);
-                                        }
-
-                                        // Fetch users based on collected user IDs
-                                        fetchUsersFromIds(userIds);
-                                    }
-                                });
+                .addSnapshotListener((senderMessages, error) -> {
+                    if (error != null) {
+                        Log.e("ChatFragment", "Error fetching sender messages", error);
+                        return;
                     }
+
+                    // Add receivers' IDs from sender messages
+                    assert senderMessages != null;
+                    for (QueryDocumentSnapshot document : senderMessages) {
+                        String receiverId = document.getString("receiverId");
+                        userIds.add(receiverId);
+                    }
+
+                    // Query messages where the current user is receiver
+                    db.collection("messages")
+                            .whereEqualTo("receiverId", currentUserId)
+                            .addSnapshotListener((receiverMessages, error1) -> {
+                                if (error1 != null) {
+                                    Log.e("ChatFragment", "Error fetching receiver messages", error1);
+                                    return;
+                                }
+
+                                // Add senders' IDs from receiver messages
+                                assert receiverMessages != null;
+                                for (QueryDocumentSnapshot document : receiverMessages) {
+                                    String senderId = document.getString("senderId");
+                                    userIds.add(senderId);
+                                }
+
+                                // Fetch users based on collected user IDs
+                                fetchUsersFromIds(userIds);
+                            });
                 });
     }
 
@@ -121,6 +118,7 @@ public class Chat_Fragment extends Fragment implements UsersAdapter.OnUserClickL
         db.collection("users")
                 .whereIn(FieldPath.documentId(), new ArrayList<>(userIds)) // Use FieldPath.documentId() to query by document ID
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         progressBar.setVisibility(View.GONE);
@@ -130,6 +128,7 @@ public class Chat_Fragment extends Fragment implements UsersAdapter.OnUserClickL
                         }
 
                         userList.clear();
+                        assert value != null;
                         for (QueryDocumentSnapshot document : value) {
                             String uid = document.getId();
                             if (uid.equals(currentUserId)) {
