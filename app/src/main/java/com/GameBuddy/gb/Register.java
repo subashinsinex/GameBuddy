@@ -1,6 +1,12 @@
 package com.GameBuddy.gb;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -8,6 +14,9 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +30,7 @@ public class Register extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private FirebaseFirestore db;
+    private static final String CHANNEL_ID = "message_channel";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +48,7 @@ public class Register extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         register.setOnClickListener(v -> {
+            register.setEnabled(false);
             String emailTxt = Objects.requireNonNull(email.getText()).toString().trim();
             String passTxt = Objects.requireNonNull(pass.getText()).toString().trim();
             String cpassTxt = Objects.requireNonNull(cpass.getText()).toString().trim();
@@ -57,6 +68,9 @@ public class Register extends AppCompatActivity {
 
                         db.collection("users").document(uid).set(user)
                                 .addOnSuccessListener(aVoid -> {
+                                    String title = "User Registered";
+                                    String message = "User Registered Successfully";
+                                    showNotification(title,message);
                                     Toast.makeText(Register.this, "User Registered", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(Register.this, User_Details.class);
                                     startActivity(intent);
@@ -69,6 +83,7 @@ public class Register extends AppCompatActivity {
                     }
                 });
             }
+            register.setEnabled(true);
         });
 
         login.setOnClickListener(v -> {
@@ -77,5 +92,35 @@ public class Register extends AppCompatActivity {
             overridePendingTransition(0, 0);
             finish();
         });
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Message Channel";
+            String description = "Channel for saving messages";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            channel.enableLights(true);
+            channel.setLightColor(Color.BLUE);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void showNotification(String title ,String message) {
+        createNotificationChannel();
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        notificationManager.notify(1, builder.build());
     }
 }

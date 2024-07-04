@@ -1,15 +1,19 @@
 package com.GameBuddy.gb;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -27,6 +31,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -80,6 +86,8 @@ public class Chat extends AppCompatActivity {
 
     private String currentUserId; // Current user's ID from Firebase Authentication
     private String userId; // Receiver's ID
+
+    private static final String CHANNEL_ID = "message_channel";
 
     private String currentPhotoPath; // Path to store the captured photo
 
@@ -174,6 +182,15 @@ public class Chat extends AppCompatActivity {
                 dispatchTakePictureIntent();
             }
         });
+
+        // Add long-click listener to the toolbar
+        toolbarUser.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                saveMessagesToTextFile();
+                return true;
+            }
+        });
     }
 
     private void updateToolbar(String userName, String profilePicUrl) {
@@ -257,6 +274,82 @@ public class Chat extends AppCompatActivity {
                 });
     }
 
+    private void saveMessagesToTextFile() {
+        messageRef
+                .whereIn("senderId", Arrays.asList(currentUserId, userId))
+                .whereIn("receiverId", Arrays.asList(currentUserId, userId))
+                .orderBy("timestamp", Query.Direction.ASCENDING)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        writeFileToStorage();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Error fetching messages", e);
+                        Toast.makeText(Chat.this, "Failed to fetch messages", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private File createTextFile() throws IOException {
+        // Create a text file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String textFileName = "Chat_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+        File textFile = File.createTempFile(
+                textFileName,  /* prefix */
+                ".txt",        /* suffix */
+                storageDir     /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        String currentTextFilePath = textFile.getAbsolutePath();
+        return textFile;
+    }
+
+    private void writeFileToStorage() {
+        messageRef
+                .whereIn("senderId", Arrays.asList(currentUserId, userId))
+                .whereIn("receiverId", Arrays.asList(currentUserId, userId))
+                .orderBy("timestamp", Query.Direction.ASCENDING)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        StringBuilder data = new StringBuilder();
+                        for (Message message : queryDocumentSnapshots.toObjects(Message.class)) {
+                            data.append("Timestamp: ").append(message.getTimestamp()).append("\n");
+                            data.append("Sender: ").append(message.getSenderId()).append("\n");
+                            data.append("Receiver: ").append(message.getReceiverId()).append("\n");
+                            data.append("Message: ").append(message.getContent()).append("\n\n");
+                        }
+                        try {
+                            File textFile = createTextFile();
+                            try (FileOutputStream fos = new FileOutputStream(textFile)) {
+                                fos.write(data.toString().getBytes());
+                                String title = "Messages Saved";
+                                String message = "Messages saved to " + textFile.getAbsolutePath();
+                                showNotification(title,message);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(Chat.this, "Failed to save messages", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Error fetching messages", e);
+                        Toast.makeText(Chat.this, "Failed to fetch messages", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void dispatchTakePictureIntent() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
@@ -319,7 +412,9 @@ public class Chat extends AppCompatActivity {
             out = new FileOutputStream(currentPhotoPath);
             rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
-            Toast.makeText(this, "Image saved: " + currentPhotoPath, Toast.LENGTH_SHORT).show();
+            String title = "Image Saved";
+            String message = "Image saved to " + currentPhotoPath;
+            showNotification(title,message);
         } catch (IOException e) {
             Log.e(TAG, "Error saving image", e);
         } finally {
@@ -361,7 +456,6 @@ public class Chat extends AppCompatActivity {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -372,5 +466,35 @@ public class Chat extends AppCompatActivity {
                 Toast.makeText(this, "Camera permission is required", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Message Channel";
+            String description = "Channel for saving messages";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            channel.enableLights(true);
+            channel.setLightColor(Color.BLUE);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void showNotification(String title ,String message) {
+        createNotificationChannel();
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        notificationManager.notify(1, builder.build());
     }
 }
