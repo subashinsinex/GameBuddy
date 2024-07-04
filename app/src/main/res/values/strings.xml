@@ -33,4 +33,5 @@
     <string name="update">Update</string>
     <string name="save_photo">Save Photo</string>
     <string name="camera">Camera</string>
+    <string name="when_no_users">No conversations yet.\n Start by searching\n for friends and begin chatting!</string>
 </resources>

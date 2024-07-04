@@ -14,6 +14,19 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/noUsersTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/bebas_neue_regular"
+        android:text="@string/when_no_users"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        android:textSize="25sp"
+        android:gravity="center" />
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

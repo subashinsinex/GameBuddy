@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,11 +35,14 @@ public class Chat_Fragment extends Fragment implements UsersAdapter.OnUserClickL
     private FirebaseFirestore db;
     private ProgressBar progressBar;
     private String currentUserId;
+    private TextView noUser;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
+
+        noUser = view.findViewById(R.id.noUsersTextView);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -106,6 +110,13 @@ public class Chat_Fragment extends Fragment implements UsersAdapter.OnUserClickL
     }
 
     private void fetchUsersFromIds(Set<String> userIds) {
+        // Check if userIds set is empty
+        if (userIds.isEmpty()) {
+            progressBar.setVisibility(View.GONE);
+            noUser.setVisibility(View.VISIBLE);
+            return;
+        }
+
         // Fetch users based on collected user IDs
         db.collection("users")
                 .whereIn(FieldPath.documentId(), new ArrayList<>(userIds)) // Use FieldPath.documentId() to query by document ID
