@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@color/marron_flush"
-    tools:context=".Profile_Image">
+    tools:context=".Profile_Pic">
 
     <ImageView
         android:id="@+id/profile_image"

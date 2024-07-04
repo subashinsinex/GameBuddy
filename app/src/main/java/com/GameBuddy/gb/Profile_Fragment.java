@@ -23,7 +23,6 @@ public class Profile_Fragment extends Fragment {
 
     private TextView profileName, profileUsername, profileStatus, profileEmail, profilePhone;
     private ImageView photo;
-    private Button editProfile, logout;
     private FirebaseUser currentUser;
     private FirebaseFirestore db;
 
@@ -41,8 +40,8 @@ public class Profile_Fragment extends Fragment {
         profileStatus = view.findViewById(R.id.profile_status);
         profileEmail = view.findViewById(R.id.profile_email);
         profilePhone = view.findViewById(R.id.profile_phone);
-        logout = view.findViewById(R.id.logout);
-        editProfile = view.findViewById(R.id.edit_profile);
+        Button logout = view.findViewById(R.id.logout);
+        Button editProfile = view.findViewById(R.id.edit_profile);
 
         // Initialize Firebase
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -60,10 +59,7 @@ public class Profile_Fragment extends Fragment {
             startActivity(intent);
         });
 
-        photo.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), Profile_Image.class);
-            startActivity(intent);
-        });
+        photo.setOnClickListener(v -> navigateToProfilePicFragment());
 
         return view;
     }
@@ -117,5 +113,11 @@ public class Profile_Fragment extends Fragment {
                 .error(R.drawable.baseline_person_24)
                 .circleCrop()
                 .into(photo);
+    }
+
+    private void navigateToProfilePicFragment() {
+        // Replace the current fragment with Profile_Pic fragment
+        Main mainActivity = (Main) requireActivity();
+        mainActivity.replaceFragment(new Profile_Pic());
     }
 }

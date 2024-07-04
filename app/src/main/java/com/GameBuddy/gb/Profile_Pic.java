@@ -3,17 +3,19 @@ package com.GameBuddy.gb;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.GameBuddy.gb.databinding.ActivityProfileImageBinding;
+import com.GameBuddy.gb.databinding.FragmentProfilePicBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -24,12 +26,13 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Profile_Image extends AppCompatActivity {
+public class Profile_Pic extends Fragment {
 
-    private ActivityProfileImageBinding binding;
+    private FragmentProfilePicBinding binding;
     private FirebaseUser currentUser;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
+    private boolean isProcessingImage = false;
 
     private final ActivityResultLauncher<String> getContentLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
@@ -37,20 +40,20 @@ public class Profile_Image extends AppCompatActivity {
     );
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentProfilePicBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-        binding = ActivityProfileImageBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         storage = FirebaseStorage.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
-        AppCompatButton get = binding.get;
-
-        get.setOnClickListener(v -> getContentLauncher.launch("image/*"));
+        binding.get.setOnClickListener(v -> getContentLauncher.launch("image/*"));
 
         loadProfilePicture();
     }
@@ -61,7 +64,7 @@ public class Profile_Image extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
+                        if (document != null && document.exists()) {
                             String profilePicUrl = document.getString("profile_pic");
                             if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
                                 Glide.with(this)
@@ -73,16 +76,18 @@ public class Profile_Image extends AppCompatActivity {
                                 binding.profileImage.setImageResource(R.drawable.baseline_person_24);
                             }
                         } else {
-                            Toast.makeText(Profile_Image.this, "User data not found", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "User data not found", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(Profile_Image.this, "Error fetching user data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Error fetching user data", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void handleImageResult(Uri uri) {
         if (uri != null) {
+            isProcessingImage = true;
+            binding.get.setEnabled(false); // Disable the button during image processing
             binding.profileImage.setImageURI(uri);
             String uid = currentUser.getUid();
             final StorageReference reference = storage.getReference().child("profile_pic").child(uid);
@@ -91,16 +96,19 @@ public class Profile_Image extends AppCompatActivity {
                     Map<String, Object> user = new HashMap<>();
                     user.put("profile_pic", uriDownload.toString());
                     db.collection("users").document(uid).update(user).addOnSuccessListener(aVoid -> {
-                        Toast.makeText(Profile_Image.this, "Profile Picture Updated", Toast.LENGTH_SHORT).show();
-                        // Navigate to Main class's profile fragment
-                        Intent intent = new Intent(Profile_Image.this, Main.class);
-                        intent.putExtra("fragmentToLoad", "profileFragment"); // Assuming the key for profile fragment
-                        startActivity(intent);
-                        finish();
+                        Toast.makeText(getContext(), "Profile Picture Updated", Toast.LENGTH_SHORT).show();
+                        // Navigate back to user profile fragment
+                        navigateBackToUserProfile();
+                        isProcessingImage = false;
+                        binding.get.setEnabled(true); // Enable the button after image processing is complete
                     });
                 });
             });
         }
     }
 
+    private void navigateBackToUserProfile() {
+        Main mainActivity = (Main) requireActivity();
+        mainActivity.replaceFragment(new Profile_Fragment());
+    }
 }
