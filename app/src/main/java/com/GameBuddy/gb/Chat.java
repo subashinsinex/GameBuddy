@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+//noinspection ExifInterface
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -82,8 +83,8 @@ public class Chat extends AppCompatActivity {
     private MessageAdapter adapter;
     private List<Message> messageList;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference messageRef = db.collection("messages");
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference messageRef = db.collection("messages");
 
     private String currentUserId; // Current user's ID from Firebase Authentication
     private String userId; // Receiver's ID

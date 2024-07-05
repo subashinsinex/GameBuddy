@@ -1,7 +1,9 @@
 package com.GameBuddy.gb;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -11,13 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
@@ -115,7 +117,7 @@ public class Profile_Pic extends Fragment {
                 db.collection("users").document(uid).update(user).addOnSuccessListener(aVoid -> {
                     String title = "Profile Picture Updated";
                     String message = "Profile Picture Updated Successfully";
-                    showNotification(title,message);
+                    showNotification(title, message);
                     Toast.makeText(getContext(), "Profile Picture Updated", Toast.LENGTH_SHORT).show();
                     binding.get.setEnabled(true);
                     navigateBackToUserProfile();
@@ -143,7 +145,8 @@ public class Profile_Pic extends Fragment {
         }
     }
 
-    private void showNotification(String title,String message) {
+    @SuppressLint("MissingPermission")
+    private void showNotification(String title, String message) {
         createNotificationChannel();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), CHANNEL_ID)
@@ -153,6 +156,7 @@ public class Profile_Pic extends Fragment {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(requireContext());
+
         notificationManager.notify(1, builder.build());
     }
 }
