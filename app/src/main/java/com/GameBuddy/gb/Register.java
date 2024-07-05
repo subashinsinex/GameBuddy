@@ -71,6 +71,7 @@ public class Register extends AppCompatActivity {
                                     String title = "User Registered";
                                     String message = "User Registered Successfully";
                                     showNotification(title,message);
+                                    register.setEnabled(true);
                                     Toast.makeText(Register.this, "User Registered", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(Register.this, User_Details.class);
                                     startActivity(intent);
@@ -80,10 +81,10 @@ public class Register extends AppCompatActivity {
                                 .addOnFailureListener(e -> Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_SHORT).show());
                     } else {
                         Toast.makeText(Register.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+                        register.setEnabled(true);
                     }
                 });
             }
-            register.setEnabled(true);
         });
 
         login.setOnClickListener(v -> {

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,11 +50,11 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
         }
 
         locationButton = view.findViewById(R.id.location);
-        locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDeviceLocation();
-            }
+        locationButton.setOnClickListener(v -> getDeviceLocation());
+        locationButton.setOnLongClickListener(v -> {
+            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.blink);
+            locationButton.startAnimation(animation);
+            return true;
         });
 
         locationCallback = new LocationCallback() {

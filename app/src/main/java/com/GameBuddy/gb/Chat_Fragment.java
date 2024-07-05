@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -44,6 +46,11 @@ public class Chat_Fragment extends Fragment implements UsersAdapter.OnUserClickL
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         noUser = view.findViewById(R.id.noUsersTextView);
+
+        noUser.setOnClickListener(v -> {
+            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.move);
+            noUser.startAnimation(animation);
+        });
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

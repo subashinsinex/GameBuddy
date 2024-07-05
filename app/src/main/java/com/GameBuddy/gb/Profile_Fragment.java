@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -60,6 +62,12 @@ public class Profile_Fragment extends Fragment {
         });
 
         photo.setOnClickListener(v -> navigateToProfilePicFragment());
+
+        photo.setOnLongClickListener(v -> {
+            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.sequential);
+            photo.startAnimation(animation);
+            return true;
+        });
 
         return view;
     }

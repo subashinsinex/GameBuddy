@@ -34,4 +34,8 @@
     <string name="save_photo">Save Photo</string>
     <string name="camera">Camera</string>
     <string name="when_no_users">No conversations yet.\n Start by searching\n for friends and begin chatting!</string>
+    <string name="reset">RESET</string>
+    <string name="forgot_password_title">Forgot Password</string>
+    <string name="back_to_login_page">Back to Login Page</string>
+    <string name="forgot_password_q">Forgot Password?</string>
 </resources>

@@ -74,6 +74,7 @@ public class Chat extends AppCompatActivity {
 
     private ImageView toolbarProfilePic;
     private TextView toolbarUser;
+    ImageView download;
     private EditText editTextMessage;
     private RecyclerView recyclerViewMessages;
     private LinearLayout layoutRoot;
@@ -109,6 +110,7 @@ public class Chat extends AppCompatActivity {
 
         toolbarProfilePic = findViewById(R.id.toolbar_profile_pic);
         toolbarUser = findViewById(R.id.toolbar_user);
+        download = findViewById(R.id.download);
         editTextMessage = findViewById(R.id.editTextMessage);
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
         layoutRoot = findViewById(R.id.main);
@@ -183,14 +185,7 @@ public class Chat extends AppCompatActivity {
             }
         });
 
-        // Add long-click listener to the toolbar
-        toolbarUser.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                saveMessagesToTextFile();
-                return true;
-            }
-        });
+        download.setOnClickListener(v -> { saveMessagesToTextFile();});
     }
 
     private void updateToolbar(String userName, String profilePicUrl) {
